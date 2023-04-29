@@ -40,9 +40,9 @@ struct Args {}
 #[derive(Debug, thiserror::Error)]
 enum Error {
     #[error("A")]
-    A,
+    _A,
     #[error("B")]
-    B,
+    _B,
 }
 
 #[tokio::main]
@@ -54,10 +54,6 @@ async fn main() -> Result<()> {
 
     let args = Args::parse();
     log::info!("{:?}", args);
-
-    {
-        ()
-    }
 
     Ok(())
 }
