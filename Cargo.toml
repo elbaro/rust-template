@@ -15,6 +15,7 @@ color-eyre = "0.6.2"
 # futures = "0.3.27"
 # governor = "0.5.1"
 # serde = { version = "1.0.158", features = ["derive"] }
+tachyonix = "0.2.0"
 thiserror = "1.0.40"
 tokio = { version = "1.26.0", features = ["macros", "rt-multi-thread"] }
 
