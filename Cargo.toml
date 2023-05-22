@@ -1,8 +1,8 @@
 [package]
-name = "rust-template"
+name = "{{project-name}}"
 version = "0.1.0"
 edition = "2021"
-authors = ["elbaro <elbaro@users.noreply.github.com>"]
+authors = ["{{authors}}"]
 publish = false
 
 [dependencies]

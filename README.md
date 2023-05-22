@@ -1,3 +1,5 @@
+cargo generate elbaro/rust-template
+
 ## Pre-commit
 ```sh
 pip install pre-commit

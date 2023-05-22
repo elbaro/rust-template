@@ -2,7 +2,10 @@ use clap::Parser;
 use color_eyre::eyre::Result;
 
 #[derive(Debug, Parser)]
-struct Args {}
+struct Args {
+    #[clap(long, default_value = "0.0.0.0:3000")]
+    bind: std::net::SocketAddr,
+}
 
 // fn install_tracing() -> Result<()> {
 //     use opentelemetry::sdk::trace::Sampler;
@@ -37,23 +40,48 @@ struct Args {}
 //     Ok(())
 // }
 
+async fn serve(bind_addr: SocketAddr) {
+    let app = Router::new()
+        .route("/", get(index))
+        .route("/aa", get(aa))
+        .with_state(Arc::new(0));
+
+    axum::Server::bind(&bind_addr)
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+}
+
 #[derive(Debug, thiserror::Error)]
 enum Error {
-    #[error("A")]
-    _A,
-    #[error("B")]
-    _B,
+    #[error("data store disconnected {}", 123)]
+    Disconnect(#[from] std::io::Error),
+    #[error("the data for key `{0}` is not available")]
+    Redaction(String),
+    #[error("invalid header (expected {expected:?}, found {found:?})")]
+    InvalidHeader {
+        expected: String,
+        found: String,
+    },
+    #[error("Parse Failed")]
+    InvalidInput {
+        #[from]
+        source: SerdeError,
+        backtrace: Backtrace,
+    }
+    #[error("unknown data store error")]
+    Unknown,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
-    color_eyre::install()?;
-    // install_tracing()?;
-    // install_metrics()?;
+    pretty_env_logger::init_timed();
+    color_eyre::install()?; // panic handler
+    install_tracing()?;
 
     let args = Args::parse();
-    log::info!("{:?}", args);
+    log::info!("{:#?}", args);
 
     Ok(())
 }
